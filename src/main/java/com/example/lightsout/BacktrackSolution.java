@@ -25,14 +25,19 @@ public class BacktrackSolution {
 
         String boardString = br.readLine();
         String[] boardArray = boardString.split(",");//[100, 101, 011]
+        Arrays.stream(boardArray).forEach(System.out::println);
         String piecesString = br.readLine();
+        System.out.println("PiecesString: "+piecesString);
         String[] piecesArr = piecesString.replace(",", "Y").split(" ");//[..X|XXX|X.., X|X|X, .X|XX, XX.|.X.|.XX, XX|X., XX, .XX|XX.]
+        System.out.println("PiecesArr: "+piecesArr);
         br.close();
         long startTime = System.currentTimeMillis() / 1000;
 
         int[][] board = toBoardMatrix(boardArray); // create board
+
         List<String[][]> listMatrix = toPiecesListMatrix(piecesArr); // create list of pieces
         System.out.println(solution(board,listMatrix,depth));
+
 
         System.out.println("# FINISHED AT " + new Date() + "; Elapsed Time: " + (System.currentTimeMillis() / 1000 - startTime) + " Second");
     }
@@ -52,7 +57,7 @@ public class BacktrackSolution {
         return board;
     }
 
-    public static String solution(int[][] board, List<String[][]> listMatrix, int depth){
+    public static String  solution(int[][] board, List<String[][]> listMatrix, int depth){
         StringBuilder result= new StringBuilder();
         backtrack(board, listMatrix, -1, depth, result);// go to solve
         return result.reverse().toString().trim();
@@ -77,6 +82,13 @@ public class BacktrackSolution {
                     break;//If piece violated the boarder of the board, go for the next item of board.
                 int[][] bk = copyBoard(board);//for backtrack. Save the current board.
                 placePieceOnBoard(board, listMatrix.get(indexListMatrix), row, col, depth);//Place a piece on the board
+
+                Arrays.stream(board)
+                        .flatMapToInt(x -> Arrays.stream(x))
+                        .forEach(element -> System.out.println(element));
+                System.out.println("new : ");
+
+
                 if (sumBoardMatrix(board) == 0) {//if we found a solution then return true.
                     if ((indexListMatrix) == (listMatrix.size() - 1)) {//if all pieces are finished and found a solution then return true.
                         result.append(row).append(",").append(col).append(" ");
@@ -125,7 +137,7 @@ public class BacktrackSolution {
     }
 
     /**
-     * I used sum to know when algorithm find a solution.
+     * I used sum to know when alg  orithm find a solution.
      * @param board
      */
 
@@ -179,7 +191,7 @@ public class BacktrackSolution {
         for (int z = 0; z < piecesArr.length; z++) {
             String[] tempatt = piecesArr[z].split("Y");
             List<String> sub = Arrays.asList(tempatt);//[..X, XXX, X..]
-            listList.add(sub);
+//            listList.add(sub);
             //[..X, XXX, X..] -> [.  .  X]
             //  [X  X  X]
             //                   [X  .  .]
