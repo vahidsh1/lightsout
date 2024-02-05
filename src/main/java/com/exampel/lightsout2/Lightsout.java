@@ -39,22 +39,21 @@ public class Lightsout {
 
     public static List<String[][]> toPiecesListMatrix(String[] piecesArr) {
         List<String[]> piecesArrNew = new ArrayList<>();
-        System.out.println(piecesArr.length);
-        System.out.println(piecesArr[0] + "  " + piecesArr[1] + " " + piecesArr[2]);
-        for (int i = 0; i < piecesArr.length; i++) {
-            String[] temp = piecesArr[i].split("Y");
-            for (int j = 0; j < temp.length; j++) {
-
-                System.out.println(Character.toString(temp[j].charAt(0)) + Character.toString(temp[j].charAt(1)) + "  " + i);
-
-//            for (int j = 0; j < piecesArr[i].length(); j++) {
-//                for (int k = 0; k < piecesArr[0].length(); k++) {
-//                    Character.toString(piecesArrNew.get(j))
-//
-//                }
-//
-            }        }
-            return null;
+        List<String[][]> arrayList = new ArrayList<>();
+        List<List<String[][]>> arrayListFinal = new ArrayList<>();
+        for (int item = 0; item < piecesArr.length; item++) {
+            String[] temp = piecesArr[item].split("Y");
+            String[][] array = new String[temp.length][temp[0].length()];
+            for (int row = 0; row < temp.length; row++) {
+                for (int column = 0; column < temp[0].length(); column++) {
+                    array[row][column] = Character.toString(temp[row].charAt(column));
+                    arrayList.add(item, array);
+                    System.out.println(arrayList.get(item)[row][column]);
+                }
+                arrayListFinal.add(arrayList);
+            }
         }
+        return null;
 
+    }
 }
