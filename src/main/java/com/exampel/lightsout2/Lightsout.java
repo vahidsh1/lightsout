@@ -11,7 +11,7 @@ public class Lightsout {
     final static String Path = "./samples/";
 
     public static void main(String[] args) throws IOException {
-        File file = new File(Path + "00.txt");
+        File file = new File(Path + "01.txt");
         BufferedReader reader = new BufferedReader(new FileReader(file));
         int depth = Integer.valueOf(reader.readLine());
         String boardString = reader.readLine();
