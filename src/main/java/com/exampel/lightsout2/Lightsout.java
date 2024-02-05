@@ -47,13 +47,12 @@ public class Lightsout {
             for (int row = 0; row < temp.length; row++) {
                 for (int column = 0; column < temp[0].length(); column++) {
                     array[row][column] = Character.toString(temp[row].charAt(column));
-                    arrayList.add(item, array);
-                    System.out.println(arrayList.get(item)[row][column]);
+//                    System.out.println(arrayList.get(item)[row][column]);
                 }
-                arrayListFinal.add(arrayList);
             }
+            arrayList.add(item, array);
         }
-        return null;
+        return arrayList;
 
     }
 }
