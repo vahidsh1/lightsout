@@ -11,15 +11,22 @@ public class Lightsout {
     final static String Path = "./samples/";
 
     public static void main(String[] args) throws IOException {
-        File file = new File(Path + "01.txt");
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        int depth = Integer.valueOf(reader.readLine());
-        String boardString = reader.readLine();
-        String[] boardArray = boardString.split(",");//[100, 101, 011]
-        Arrays.stream(boardArray).forEach(System.out::println);
-        String piecesString = reader.readLine();
-        String[] piecesArr = piecesString.replace(",", "Y").split(" ");//[..X|XXX|X.., X|X|X, .X|XX, XX.|.X.|.XX, XX|X., XX, .XX|XX.]
-        reader.close();
+        List<String[]> boardArray = new ArrayList<>();
+        List<String[]> piecesArr = new ArrayList<>();
+        List<Integer> depth = new ArrayList<>();
+        List<Integer> lenghtOfInput = new ArrayList<>();
+        for(int i = 0; i < 10 ; i++) {
+            File file = new File(Path + "0" + i + ".txt");
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            depth.add(Integer.valueOf(reader.readLine()));
+            String boardString = reader.readLine();
+            boardArray.add(boardString.split(","));
+            String piecesString = reader.readLine();
+            piecesArr.add(piecesString.replace(",", "Y").split(" "));//[..X|XXX|X.., X|X|X, .X|XX, XX.|.X.|.XX, XX|X., XX, .XX|XX.]
+            reader.close();
+            lenghtOfInput.add(boardArray.get(i).length);
+        }
+        boardArray.stream().forEach();
         long startTime = System.currentTimeMillis() / 1000;
 
         int[][] board = toMatrix(boardArray); // create board
