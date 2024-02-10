@@ -1,56 +1,76 @@
 package com.exampel.lightsout2;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 public class Lightsout {
     final static String Path = "./samples/";
 
     public static void main(String[] args) throws IOException {
-        List<String[]> boardArray = new ArrayList<>();
-        List<String[]> piecesArr = new ArrayList<>();
+        List<String[]> boardArrayList = new ArrayList<>();
+        List<String[]> piecesArrList = new ArrayList<>();
         List<Integer> depth = new ArrayList<>();
         List<Integer> lenghtOfInput = new ArrayList<>();
+        List<int[][]> listMatrixBoard=new ArrayList<>();
+        Map<Integer,int[][]> mapOfInputs = new HashMap<>();
+        HashMap<Integer,List<String[][]>> mapOfPatterns =new HashMap<>();
         for(int i = 0; i < 10 ; i++) {
             File file = new File(Path + "0" + i + ".txt");
             BufferedReader reader = new BufferedReader(new FileReader(file));
             depth.add(Integer.valueOf(reader.readLine()));
             String boardString = reader.readLine();
-            boardArray.add(boardString.split(","));
+            boardArrayList.add(boardString.split(","));
             String piecesString = reader.readLine();
-            piecesArr.add(piecesString.replace(",", "Y").split(" "));//[..X|XXX|X.., X|X|X, .X|XX, XX.|.X.|.XX, XX|X., XX, .XX|XX.]
+            piecesArrList.add(piecesString.replace(",", "Y").split(" "));//[..X|XXX|X.., X|X|X, .X|XX, XX.|.X.|.XX, XX|X., XX, .XX|XX.]
             reader.close();
-            lenghtOfInput.add(boardArray.get(i).length);
+            lenghtOfInput.add(boardArrayList.get(i).length);
+            listMatrixBoard.add(toMatrix(boardArrayList.get(i)));
+
+            mapOfInputs.put(i,toMatrix(boardArrayList.get(i)));
+            mapOfPatterns.put(i,toPiecesListMatrix(piecesArrList.get(i)));
+
         }
-        boardArray.stream().forEach();
+        System.out.println(listMatrixBoard.stream().toArray().length);
+        System.out.println(Arrays.stream(piecesArrList.get(0)).count() + " " + Arrays.stream(piecesArrList.get(5)).count());
+        System.out.println(Arrays.stream(piecesArrList.get(9)).count() + " " + Arrays.stream(piecesArrList.get(8)).count());
+        System.out.println(mapOfInputs.keySet().stream().toString());
+
         long startTime = System.currentTimeMillis() / 1000;
 
-        int[][] board = toMatrix(boardArray); // create board
-        List<String[][]> listMatrix = toPiecesListMatrix(piecesArr); // create list of pieces
-        System.out.println(solution(board,listMatrix,depth));
-
-
-        System.out.println("# FINISHED AT " + new Date() + "; Elapsed Time: " + (System.currentTimeMillis() / 1000 - startTime) + " Second");
+//        int[][] board = toMatrix(boardArray); // create board
+//        List<String[][]> listMatrix = toPiecesListMatrix(piecesArr); // create list of pieces
+//        System.out.println(solution(board,listMatrix,depth));
+//
+//
+//        System.out.println("# FINISHED AT " + new Date() + "; Elapsed Time: " + (System.currentTimeMillis() / 1000 - startTime) + " Second");
 
 
     }
 
-    public static int[][] toMatrix(String[] inputString) {
-        int matrixDepth = inputString.length;
-        int[][] board = new int[inputString.length][inputString[0].length() + 1];
-        for (int i = 0; i < inputString.length; i++) {
-            String row = inputString[i];
+//    public static int[][] toMatrix(String[] inputString) {
+//        int matrixDepth = inputString.length;
+//        int[][] board = new int[inputString.length][inputString[0].length() + 1];
+//        for (int i = 0; i < inputString.length; i++) {
+//            String row = inputString[i];
+//            for (int j = 0; j < row.length(); j++) {
+//                board[i][j] = Integer.parseInt(Character.toString(row.charAt(j)));
+//            }
+//        }
+//        return board;
+//    }
+
+
+    public static int[][] toMatrix(String[] boardArray) {
+        int[][] board = new int[boardArray.length][boardArray[0].length()];
+        for (int i = 0; i < boardArray.length; i++) {
+            String row = boardArray[i];
             for (int j = 0; j < row.length(); j++) {
                 board[i][j] = Integer.parseInt(Character.toString(row.charAt(j)));
             }
         }
         return board;
     }
-
     public static List<String[][]> toPiecesListMatrix(String[] piecesArr) {
         List<String[]> piecesArrNew = new ArrayList<>();
         List<String[][]> arrayList = new ArrayList<>();
