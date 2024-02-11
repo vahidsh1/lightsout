@@ -43,6 +43,7 @@ public class Lightsout {
         }
 
 
+
         for (int num : list) {
             for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
                 if (entry.getValue().equals(num)) {
