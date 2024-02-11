@@ -14,6 +14,7 @@ public class Lightsout {
         List<Integer> lenghtOfInput = new ArrayList<>();
         List<int[][]> listMatrixBoard=new ArrayList<>();
         Map<Integer,int[][]> mapOfInputs = new HashMap<>();
+        Map<Integer,Integer> matrixDimension = new HashMap<>();
         HashMap<Integer,List<String[][]>> mapOfPatterns =new HashMap<>();
         for(int i = 0; i < 10 ; i++) {
             File file = new File(Path + "0" + i + ".txt");
@@ -26,17 +27,31 @@ public class Lightsout {
             reader.close();
             lenghtOfInput.add(boardArrayList.get(i).length);
             listMatrixBoard.add(toMatrix(boardArrayList.get(i)));
-
+            matrixDimension.put(i,(boardArrayList.get(i).length)*(boardArrayList.get(i)[0].length())*(depth.get(i)));
             mapOfInputs.put(i,toMatrix(boardArrayList.get(i)));
+            System.out.println(boardArrayList.get(i).length);
+            System.out.println(boardArrayList.get(i)[0].length());
             mapOfPatterns.put(i,toPiecesListMatrix(piecesArrList.get(i)));
 
         }
-        System.out.println(listMatrixBoard.stream().toArray().length);
-        System.out.println(Arrays.stream(piecesArrList.get(0)).count() + " " + Arrays.stream(piecesArrList.get(5)).count());
-        System.out.println(Arrays.stream(piecesArrList.get(9)).count() + " " + Arrays.stream(piecesArrList.get(8)).count());
-        System.out.println(mapOfInputs.keySet().stream().toString());
-
+        // sort matrixDimension  by matrixDimension
         long startTime = System.currentTimeMillis() / 1000;
+        ArrayList<Integer> list = new ArrayList<>();
+        LinkedHashMap<Integer, Integer> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
+            list.add(entry.getValue());
+        }
+
+
+        for (int num : list) {
+            for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
+                if (entry.getValue().equals(num)) {
+                    sortedMap.put(entry.getKey(), num);
+                }
+            }
+        }
+        System.out.println(sortedMap);
+//        for( x:sortedMap.keySet();
 
 //        int[][] board = toMatrix(boardArray); // create board
 //        List<String[][]> listMatrix = toPiecesListMatrix(piecesArr); // create list of pieces
