@@ -32,7 +32,6 @@ public class Lightsout {
             System.out.println(boardArrayList.get(i).length);
             System.out.println(boardArrayList.get(i)[0].length());
             mapOfPatterns.put(i,toPiecesListMatrix(piecesArrList.get(i)));
-
         }
         // sort matrixDimension  by matrixDimension
         long startTime = System.currentTimeMillis() / 1000;
@@ -40,31 +39,17 @@ public class Lightsout {
         LinkedHashMap<Integer, Integer> sortedMap = new LinkedHashMap<>();
         for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
             list.add(entry.getValue());
-            System.out.println(entry + "  gggg  ");
-
         }
-
         for (int num : list) {
-            System.out.println(num);
-
             for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
                 if (entry.getValue().equals(num)) {
-                    System.out.println(num+ " eee ");
                     sortedMap.put(entry.getKey(), num);
                 }
             }
         }
-        System.out.println(list);
-//        for( x:sortedMap.keySet();
-
+        System.out.println(sortedMap);
 //        int[][] board = toMatrix(boardArray); // create board
 //        List<String[][]> listMatrix = toPiecesListMatrix(piecesArr); // create list of pieces
-//        System.out.println(solution(board,listMatrix,depth));
-//
-//
-//        System.out.println("# FINISHED AT " + new Date() + "; Elapsed Time: " + (System.currentTimeMillis() / 1000 - startTime) + " Second");
-
-
     }
 
 //    public static int[][] toMatrix(String[] inputString) {
