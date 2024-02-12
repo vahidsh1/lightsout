@@ -1,5 +1,7 @@
 package com.exampel.lightsout2;
 
+import org.springframework.util.MultiValueMap;
+
 import java.io.*;
 import java.util.*;
 
@@ -12,11 +14,11 @@ public class Lightsout {
         List<String[]> piecesArrList = new ArrayList<>();
         List<Integer> depth = new ArrayList<>();
         List<Integer> lenghtOfInput = new ArrayList<>();
-        List<int[][]> listMatrixBoard=new ArrayList<>();
-        Map<Integer,int[][]> mapOfInputs = new HashMap<>();
-        Map<Integer,Integer> matrixDimension = new HashMap<>();
-        HashMap<Integer,List<String[][]>> mapOfPatterns =new HashMap<>();
-        for(int i = 0; i < 10 ; i++) {
+        List<int[][]> listMatrixBoard = new ArrayList<>();
+        Map<Integer, int[][]> mapOfInputs = new HashMap<>();
+        Map<Integer, Integer> matrixDimension = new HashMap<>();
+        HashMap<Integer, List<String[][]>> mapOfPatterns = new HashMap<>();
+        for (int i = 0; i < 10; i++) {
             File file = new File(Path + "0" + i + ".txt");
             BufferedReader reader = new BufferedReader(new FileReader(file));
             depth.add(Integer.valueOf(reader.readLine()));
@@ -27,11 +29,11 @@ public class Lightsout {
             reader.close();
             lenghtOfInput.add(boardArrayList.get(i).length);
             listMatrixBoard.add(toMatrix(boardArrayList.get(i)));
-            matrixDimension.put(i,(boardArrayList.get(i).length)*(boardArrayList.get(i)[0].length())*(depth.get(i)));
-            mapOfInputs.put(i,toMatrix(boardArrayList.get(i)));
+            matrixDimension.put(i, (boardArrayList.get(i).length) * (boardArrayList.get(i)[0].length()) * (depth.get(i)));
+            mapOfInputs.put(i, toMatrix(boardArrayList.get(i)));
             System.out.println(boardArrayList.get(i).length);
             System.out.println(boardArrayList.get(i)[0].length());
-            mapOfPatterns.put(i,toPiecesListMatrix(piecesArrList.get(i)));
+            mapOfPatterns.put(i, toPiecesListMatrix(piecesArrList.get(i)));
         }
         // sort matrixDimension  by matrixDimension
         long startTime = System.currentTimeMillis() / 1000;
@@ -40,15 +42,39 @@ public class Lightsout {
         for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
             list.add(entry.getValue());
         }
-        for (int num : list) {
-            for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
-                if (entry.getValue().equals(num)) {
-                    sortedMap.put(entry.getKey(), num);
-                }
-            }
+//        Collections.sort(list);
+//        for (int num : list) {
+//            for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
+//                if (entry.getValue().equals(num)) {
+//                    sortedMap.put(entry.getKey(), num);
+//                }
+//            }
+//        }
+
+        Object[] a = list.toArray();
+        System.out.println(a[3] + " before ");
+        Arrays.sort(a);
+        System.out.println(a[3] + " after ");
+        list.listIterator();
+        ListIterator<Integer> i = list.listIterator();
+        for (Object e : a) {
+            i.next();
+            i.set((Integer) e);
         }
-        System.out.println(sortedMap);
-//        int[][] board = toMatrix(boardArray); // create board
+
+        System.out.println(list + " after ");
+
+        ArrayList<Integer> list2 = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
+            list2.add(entry.getValue());
+        }
+        Collections.sort(list2);
+        MultiValueMap<Integer,Integer> nmap = new MultiValueMap<>();
+        for (Integer num : list2) {
+            nmap.put(list.indexOf(num),num);
+        }
+        System.out.println("ds");
+        //        int[][] board = toMatrix(boardArray); // create board
 //        List<String[][]> listMatrix = toPiecesListMatrix(piecesArr); // create list of pieces
     }
 
@@ -75,6 +101,7 @@ public class Lightsout {
         }
         return board;
     }
+
     public static List<String[][]> toPiecesListMatrix(String[] piecesArr) {
         List<String[]> piecesArrNew = new ArrayList<>();
         List<String[][]> arrayList = new ArrayList<>();
@@ -106,8 +133,8 @@ public class Lightsout {
         }
     }
 
-    public static String  solution(int[][] board, List<String[][]> listMatrix, int depth){
-        StringBuilder result= new StringBuilder();
+    public static String solution(int[][] board, List<String[][]> listMatrix, int depth) {
+        StringBuilder result = new StringBuilder();
         backtrack(board, listMatrix, -1, depth, result);// go to solve
         return result.reverse().toString().trim();
     }
