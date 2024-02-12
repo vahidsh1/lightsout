@@ -73,6 +73,7 @@ public class Lightsout {
         for (Integer num : list2) {
             nmap.put(list.indexOf(num),num);
         }
+
         System.out.println("ds");
         //        int[][] board = toMatrix(boardArray); // create board
 //        List<String[][]> listMatrix = toPiecesListMatrix(piecesArr); // create list of pieces
