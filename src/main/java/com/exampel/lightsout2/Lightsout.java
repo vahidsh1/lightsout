@@ -40,18 +40,21 @@ public class Lightsout {
         LinkedHashMap<Integer, Integer> sortedMap = new LinkedHashMap<>();
         for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
             list.add(entry.getValue());
+            System.out.println(entry + "  gggg  ");
+
         }
 
-
-
         for (int num : list) {
+            System.out.println(num);
+
             for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
                 if (entry.getValue().equals(num)) {
+                    System.out.println(num+ " eee ");
                     sortedMap.put(entry.getKey(), num);
                 }
             }
         }
-        System.out.println(sortedMap);
+        System.out.println(list);
 //        for( x:sortedMap.keySet();
 
 //        int[][] board = toMatrix(boardArray); // create board
