@@ -4,6 +4,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Lightsout {
@@ -28,71 +29,30 @@ public class Lightsout {
             piecesArrList.add(piecesString.replace(",", "Y").split(" "));//[..X|XXX|X.., X|X|X, .X|XX, XX.|.X.|.XX, XX|X., XX, .XX|XX.]
             reader.close();
             lenghtOfInput.add(boardArrayList.get(i).length);
-            listMatrixBoard.add(toMatrix(boardArrayList.get(i)));
+            listMatrixBoard.add(toBoardMatrix(boardArrayList.get(i)));
             matrixDimension.put(i, (boardArrayList.get(i).length) * (boardArrayList.get(i)[0].length()) * (depth.get(i)));
-            mapOfInputs.put(i, toMatrix(boardArrayList.get(i)));
-            System.out.println(boardArrayList.get(i).length);
-            System.out.println(boardArrayList.get(i)[0].length());
+            mapOfInputs.put(i, toBoardMatrix(boardArrayList.get(i)));
             mapOfPatterns.put(i, toPiecesListMatrix(piecesArrList.get(i)));
         }
-        // sort matrixDimension  by matrixDimension
-        long startTime = System.currentTimeMillis() / 1000;
-        ArrayList<Integer> list = new ArrayList<>();
-        LinkedHashMap<Integer, Integer> sortedMap = new LinkedHashMap<>();
-        for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
-            list.add(entry.getValue());
-        }
-//        Collections.sort(list);
-//        for (int num : list) {
-//            for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
-//                if (entry.getValue().equals(num)) {
-//                    sortedMap.put(entry.getKey(), num);
-//                }
-//            }
-//        }
+        List<Map.Entry<Integer, Integer>> newHashmap = new ArrayList<>();
+        newHashmap = matrixDimension.entrySet().stream()
+                .sorted(Map.Entry.<Integer, Integer>comparingByValue().reversed()).collect(Collectors.toList());
+        System.out.println(newHashmap);
+        for (int i = 0; i < newHashmap.size(); i++) {
+            int index = newHashmap.get(i).getKey();
+            long startTime = System.currentTimeMillis() / 1000;
 
-        Object[] a = list.toArray();
-        System.out.println(a[3] + " before ");
-        Arrays.sort(a);
-        System.out.println(a[3] + " after ");
-        list.listIterator();
-        ListIterator<Integer> i = list.listIterator();
-        for (Object e : a) {
-            i.next();
-            i.set((Integer) e);
+            String result = solution(mapOfInputs.get(index), mapOfPatterns.get(index), depth.get(index));
+            System.out.println(result);
+            System.out.println("# FINISHED AT " + new Date() + "; Elapsed Time: " + (System.currentTimeMillis() / 1000 - startTime) + " Second");
         }
-
-        System.out.println(list + " after ");
-
-        ArrayList<Integer> list2 = new ArrayList<>();
-        for (Map.Entry<Integer, Integer> entry : matrixDimension.entrySet()) {
-            list2.add(entry.getValue());
-        }
-        Collections.sort(list2);
-        MultiValueMap<Integer,Integer> nmap = new MultiValueMap<>();
-        for (Integer num : list2) {
-            nmap.put(list.indexOf(num),num);
-        }
-
-        System.out.println("ds");
-        //        int[][] board = toMatrix(boardArray); // create board
-//        List<String[][]> listMatrix = toPiecesListMatrix(piecesArr); // create list of pieces
     }
 
-//    public static int[][] toMatrix(String[] inputString) {
-//        int matrixDepth = inputString.length;
-//        int[][] board = new int[inputString.length][inputString[0].length() + 1];
-//        for (int i = 0; i < inputString.length; i++) {
-//            String row = inputString[i];
-//            for (int j = 0; j < row.length(); j++) {
-//                board[i][j] = Integer.parseInt(Character.toString(row.charAt(j)));
-//            }
-//        }
-//        return board;
-//    }
-
-
-    public static int[][] toMatrix(String[] boardArray) {
+    /**
+     * Create board matrix boardArray
+     * @param boardArray
+     */
+    public static int[][] toBoardMatrix(String[] boardArray) {
         int[][] board = new int[boardArray.length][boardArray[0].length()];
         for (int i = 0; i < boardArray.length; i++) {
             String row = boardArray[i];
@@ -103,45 +63,20 @@ public class Lightsout {
         return board;
     }
 
-    public static List<String[][]> toPiecesListMatrix(String[] piecesArr) {
-        List<String[]> piecesArrNew = new ArrayList<>();
-        List<String[][]> arrayList = new ArrayList<>();
-        List<List<String[][]>> arrayListFinal = new ArrayList<>();
-        for (int item = 0; item < piecesArr.length; item++) {
-            String[] temp = piecesArr[item].split("Y");
-            String[][] array = new String[temp.length][temp[0].length()];
-            for (int row = 0; row < temp.length; row++) {
-                for (int column = 0; column < temp[0].length(); column++) {
-                    array[row][column] = Character.toString(temp[row].charAt(column));
-//                    System.out.println(arrayList.get(item)[row][column]);
-                }
-            }
-            arrayList.add(item, array);
-        }
-        return arrayList;
-
-    }
-
-
-    private static void placePieceOnBoard(int[][] board, String[][] piece, final int startRow, final int startCol, final int depth) {//OK
-        if (startRow + piece.length > board.length || startCol + piece[0].length > board[0].length) return;
-        for (int i = 0; i < piece.length; i++) {
-            for (int j = 0; j < piece[0].length; j++) {
-                if (piece[i][j].charAt(0) == 'X') {
-                    board[startRow + i][startCol + j] = ((board[startRow + i][startCol + j] + 1) % depth);
-                }
-            }
-        }
-    }
-
-    public static String solution(int[][] board, List<String[][]> listMatrix, int depth) {
-        StringBuilder result = new StringBuilder();
+    public static String solution(int[][] board, List<String[][]> listMatrix, int depth){
+        StringBuilder result= new StringBuilder();
         backtrack(board, listMatrix, -1, depth, result);// go to solve
         return result.reverse().toString().trim();
     }
-
+    /**
+     * The solution of the application. I used backtrack for solving this problem.
+     * @param board
+     * @param listMatrix the list of pieces matrix
+     * @param indexListMatrix  current piece need to palce on boeard
+     * @param depth of game
+     * @param result
+     */
     private static boolean backtrack(int[][] board, List<String[][]> listMatrix, int indexListMatrix, int depth, StringBuilder result) {
-
         if (indexListMatrix >= listMatrix.size() - 1) {//If our pieces are finished. Then return false.
             return false;
         }
@@ -152,13 +87,6 @@ public class Lightsout {
                     break;//If piece violated the boarder of the board, go for the next item of board.
                 int[][] bk = copyBoard(board);//for backtrack. Save the current board.
                 placePieceOnBoard(board, listMatrix.get(indexListMatrix), row, col, depth);//Place a piece on the board
-
-                Arrays.stream(board)
-                        .flatMapToInt(x -> Arrays.stream(x))
-                        .forEach(element -> System.out.println(element));
-                System.out.println("new : ");
-
-
                 if (sumBoardMatrix(board) == 0) {//if we found a solution then return true.
                     if ((indexListMatrix) == (listMatrix.size() - 1)) {//if all pieces are finished and found a solution then return true.
                         result.append(row).append(",").append(col).append(" ");
@@ -176,12 +104,40 @@ public class Lightsout {
         return false;
     }
 
+    /**
+     * For revert the change I copied the array
+     * @param board
+     */
     private static int[][] copyBoard(int[][] board) {
         int[][] bk = new int[board.length][];
         for (int i = 0; i < board.length; i++)
             bk[i] = board[i].clone();
         return bk;
     }
+
+    /**
+     * Place the piece on board.
+     * @param board
+     * @param piece
+     * @param startRow
+     * @param startCol
+     * @param depth
+     */
+    private static void placePieceOnBoard(int[][] board, String[][] piece, final int startRow, final int startCol, final int depth) {//OK
+        if (startRow + piece.length > board.length || startCol + piece[0].length > board[0].length) return;
+        for (int i = 0; i < piece.length; i++) {
+            for (int j = 0; j < piece[0].length; j++) {
+                if (piece[i][j].charAt(0) == 'X') {
+                    board[startRow + i][startCol + j] = ((board[startRow + i][startCol + j] + 1) % depth);
+                }
+            }
+        }
+    }
+
+    /**
+     * I used sum to know when algorithm find a solution.
+     * @param board
+     */
 
     private static int sumBoardMatrix(final int[][] board) {
         int result = 0;
@@ -193,6 +149,65 @@ public class Lightsout {
         return result;
     }
 
+    private static void printBoradMatrix(int[][] board) {
+        System.out.println(board.length + "*" + board[0].length + "*****************");
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                System.out.print(board[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    private static void printPiecesMatrix(String[][] Ppieces) {
+        System.out.println(Ppieces.length + "*" + Ppieces[0].length + "*****************");
+        for (int i = 0; i < Ppieces.length; i++) {
+            for (int j = 0; j < Ppieces[i].length; j++) {
+                System.out.print(Ppieces[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+    private static void printListMatrix(List<String[][]> listMatrix) {
+        for (int z = 0; z < listMatrix.size(); z++) {
+            String[][] piececs = listMatrix.get(z);
+            System.out.println(z + "------------------");
+            for (int i = 0; i < piececs.length; i++) {
+                for (int j = 0; j < piececs[i].length; j++) {
+                    System.out.print(piececs[i][j] + " ");
+                }
+                System.out.println();
+            }
+        }
+    }
+
+
+    public static List<String[][]> toPiecesListMatrix(String[] piecesArr) {
+        List<List<String>> listList = new ArrayList<>();
+        List<String[][]> listMatrix = new ArrayList<>();
+
+        for (int z = 0; z < piecesArr.length; z++) {
+            String[] tempatt = piecesArr[z].split("Y");
+            List<String> sub = Arrays.asList(tempatt);//[..X, XXX, X..]
+            listList.add(sub);
+            //[..X, XXX, X..] -> [.  .  X]
+            //  [X  X  X]
+            //                   [X  .  .]
+
+            //[X, X, X] ->       [X]
+            //                   [X]
+            //                   [X]
+            String[][] pieces = new String[sub.size()][sub.get(0).length()];
+            for (int i = 0; i < sub.size(); i++) {
+                String row = sub.get(i);
+                for (int j = 0; j < row.length(); j++) {
+                    pieces[i][j] = (Character.toString(row.charAt(j)));
+                }
+            }
+            listMatrix.add(pieces);
+        }
+
+        return listMatrix;
+    }
+
 }
-
-
